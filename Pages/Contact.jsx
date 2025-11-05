@@ -300,7 +300,7 @@ const Contact = () => {
           <div className="rounded-lg overflow-hidden mb-4 map-h">
             <iframe 
               title="Zee's Wear location" 
-              className="w-full h-full border-0" 
+              className="w-full h-80 border-0" 
               loading="lazy"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.1234567890123!2d67.0011!3d24.8607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f...%3A0x...!2sKarachi%2C%20Pakistan!5e0!3m2!1sen!2s!4v0000000000000"
               allowFullScreen
