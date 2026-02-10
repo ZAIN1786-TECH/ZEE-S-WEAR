@@ -2,9 +2,9 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import { AuthProvider } from './context/AuthContext';
-import { CartProvider } from './context/CartContext';
-import { WishlistProvider } from './context/WishlistContext';
+import { AuthProvider } from './Context/AuthContext';
+import { CartProvider } from './Context/CartContext';
+import { WishlistProvider } from './Context/WishlistContext';
 
 // Lazy load pages to reduce initial bundle size
 const Home = lazy(() => import('./pages/Home'));

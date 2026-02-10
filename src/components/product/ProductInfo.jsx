@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Heart, ShoppingBag, Truck, RotateCcw, ShieldCheck, Star } from 'lucide-react';
 import Button from '../ui/Button';
-import { useCart } from '../../context/CartContext';
-import { useWishlist } from '../../context/WishlistContext';
+import { useCart } from '../../Context/CartContext';
+import { useWishlist } from '../../Context/WishlistContext';
 
 const ProductInfo = ({ product }) => {
     const [selectedSize, setSelectedSize] = useState('M');

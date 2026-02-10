@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, ShoppingBag, Heart } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { useWishlist } from '../context/WishlistContext';
-import { useCart } from '../context/CartContext';
+import { useWishlist } from '../Context/WishlistContext';
+import { useCart } from '../Context/CartContext';
 
 const Wishlist = () => {
     const { wishlistItems, toggleWishlist } = useWishlist();

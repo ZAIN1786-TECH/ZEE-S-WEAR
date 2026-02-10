@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Search, User, Menu, X, Heart, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../context/AuthContext';
-import { useCart } from '../../context/CartContext';
-import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../Context/AuthContext';
+import { useCart } from '../../Context/CartContext';
+import { useWishlist } from '../../Context/WishlistContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);

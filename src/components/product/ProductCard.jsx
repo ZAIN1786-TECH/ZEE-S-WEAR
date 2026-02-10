@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { Heart, ShoppingBag } from 'lucide-react';
 import Button from '../ui/Button';
 import { Link } from 'react-router-dom';
-import { useWishlist } from '../../context/WishlistContext';
-import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../Context/WishlistContext';
+import { useCart } from '../../Context/CartContext';
 
 const ProductCard = ({ product }) => {
     const { toggleWishlist, isInWishlist } = useWishlist();
@@ -50,8 +50,8 @@ const ProductCard = ({ product }) => {
                     <button
                         onClick={handleWishlistClick}
                         className={`p-3 rounded-full shadow-lg transition-colors ${isWishlisted
-                                ? 'bg-red-50 text-red-600'
-                                : 'bg-white hover:bg-brand-gold hover:text-white'
+                            ? 'bg-red-50 text-red-600'
+                            : 'bg-white hover:bg-brand-gold hover:text-white'
                             }`}
                     >
                         <Heart size={18} className={isWishlisted ? 'fill-current' : ''} />

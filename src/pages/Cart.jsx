@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../Context/CartContext';
 
 const Cart = () => {
     const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();

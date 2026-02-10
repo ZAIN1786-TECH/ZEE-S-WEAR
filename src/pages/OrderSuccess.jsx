@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CheckCircle, ShoppingBag } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../Context/CartContext';
 import { motion } from 'framer-motion';
 
 const OrderSuccess = () => {
