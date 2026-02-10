@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const signupWithGoogle = () => {
+    const signInWithGoogle = () => {
         return signInWithPopup(auth, googleProvider);
     };
 
@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
             setLoading(false);
+        }, (error) => {
+            console.error("Auth state change error:", error);
+            setLoading(false);
         });
 
         return unsubscribe;
@@ -31,14 +34,14 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         currentUser,
-        signupWithGoogle,
+        signInWithGoogle,
         logout,
         loading
     };
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };

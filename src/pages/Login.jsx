@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
-    const { signupWithGoogle } = useAuth();
+    const { signInWithGoogle } = useAuth();
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -11,11 +12,14 @@ const Login = () => {
     const from = location.state?.from?.pathname || "/";
 
     const handleGoogleSignIn = async () => {
+        setIsLoggingIn(true);
         try {
-            await signupWithGoogle();
+            await signInWithGoogle();
             navigate(from, { replace: true });
         } catch (error) {
             console.error("Failed to sign in", error);
+        } finally {
+            setIsLoggingIn(false);
         }
     };
 
@@ -34,7 +38,8 @@ const Login = () => {
                 <div className="mt-8 space-y-6">
                     <button
                         onClick={handleGoogleSignIn}
-                        className="group relative w-full flex justify-center py-3 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-gold transition-colors duration-200"
+                        disabled={isLoggingIn}
+                        className="group relative w-full flex justify-center py-3 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-gold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                             <img
@@ -43,7 +48,7 @@ const Login = () => {
                                 alt="Google logo"
                             />
                         </span>
-                        Sign in with Google
+                        {isLoggingIn ? "Signing in..." : "Sign in with Google"}
                     </button>
                 </div>
             </div>
