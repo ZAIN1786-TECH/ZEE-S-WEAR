@@ -1,71 +1,84 @@
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export const CartContext = createContext();
+const CartContext = createContext();
+
+export const useCart = () => {
+    return useContext(CartContext);
+};
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(savedCart);
-  }, []);
-
-  // Sync to localStorage when cart changes
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  // Add item to cart
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
+    const [cartItems, setCartItems] = useState(() => {
+        // Try to load from local storage
+        const savedCart = localStorage.getItem('cartItems');
+        return savedCart ? JSON.parse(savedCart) : [];
     });
-  };
 
-  // Update quantity or remove item
-  const updateQuantity = (productId, change) => {
-    setCart((prev) =>
-      prev
-        .map((item) =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + change }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const removeFromCart = (productId) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId));
-  };
+    useEffect(() => {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }, [cartItems]);
 
-  const clearCart = () => setCart([]);
+    const addToCart = (product, quantity = 1, size = 'M') => {
+        setCartItems((prevItems) => {
+            // Check if item with same ID and Size exists
+            const existingItemIndex = prevItems.findIndex(
+                (item) => item.id === product.id && item.size === size
+            );
 
-  const getTotalItems = () =>
-    cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (existingItemIndex > -1) {
+                // Update quantity
+                const newItems = [...prevItems];
+                newItems[existingItemIndex].quantity += quantity;
+                return newItems;
+            } else {
+                // Add new item
+                return [...prevItems, { ...product, quantity, size }];
+            }
+        });
+        setIsCartOpen(true); // Open cart drawer/feedback
+    };
 
-  return (
-    <CartContext.Provider
-      value={{
-        cart,
-        setCart,
+    const removeFromCart = (id, size) => {
+        setCartItems((prevItems) =>
+            prevItems.filter((item) => !(item.id === id && item.size === size))
+        );
+    };
+
+    const updateQuantity = (id, size, newQuantity) => {
+        if (newQuantity < 1) return;
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id && item.size === size
+                    ? { ...item, quantity: newQuantity }
+                    : item
+            )
+        );
+    };
+
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
+    const getCartTotal = () => {
+        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    };
+
+    const getCartCount = () => {
+        return cartItems.reduce((count, item) => count + item.quantity, 0);
+    };
+
+    const value = {
+        cartItems,
+        isCartOpen,
+        setIsCartOpen,
         addToCart,
-        updateQuantity,
         removeFromCart,
+        updateQuantity,
         clearCart,
-        getTotalItems,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+        getCartTotal,
+        getCartCount
+    };
+
+    return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
