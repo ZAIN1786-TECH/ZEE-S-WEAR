@@ -65,17 +65,17 @@ const ProductCard = ({ product }) => {
                 </div>
             </div>
 
-            <div className="mt-4 flex justify-between">
-                <div>
-                    <h3 className="text-sm font-medium text-gray-900">
+            <div className="mt-2 md:mt-4 flex justify-between items-start gap-2">
+                <div className="min-w-0 flex-1">
+                    <h3 className="text-xs md:text-sm font-medium text-gray-900 truncate">
                         <Link to={`/product/${product.id}`}>
                             <span aria-hidden="true" className="absolute inset-0" />
                             {product.name}
                         </Link>
                     </h3>
-                    <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+                    <p className="mt-0.5 text-[10px] md:text-sm text-gray-500 truncate">{product.category}</p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                <p className="text-xs md:text-sm font-bold md:font-medium text-gray-900 whitespace-nowrap">${product.price}</p>
             </div>
         </div>
     );

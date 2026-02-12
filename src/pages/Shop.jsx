@@ -111,7 +111,7 @@ const Shop = () => {
                         {/* Product Grid */}
                         <div className="lg:col-span-3">
                             {loading ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6 xl:gap-x-8">
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-4 md:gap-x-6 xl:gap-x-8">
                                     {[...Array(6)].map((_, i) => (
                                         <div key={i} className="animate-pulse">
                                             <div className="bg-gray-200 aspect-[3/4] w-full rounded-md mb-4"></div>
@@ -121,7 +121,7 @@ const Shop = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6 xl:gap-x-8">
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-4 md:gap-x-6 xl:gap-x-8">
                                     {products.map((product) => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}

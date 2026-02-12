@@ -208,7 +208,7 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Mobile Menu Button & Search */}
+                    {/* Mobile Menu Button, Search & Cart */}
                     <div className="md:hidden flex items-center gap-4">
                         <button
                             onClick={() => {
@@ -219,6 +219,16 @@ const Navbar = () => {
                         >
                             <Search size={24} />
                         </button>
+
+                        <Link to="/cart" className="text-brand-black relative">
+                            <ShoppingBag size={24} />
+                            {getCartCount() > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                                    {getCartCount()}
+                                </span>
+                            )}
+                        </Link>
+
                         <button onClick={toggleMenu} className="text-brand-black">
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
