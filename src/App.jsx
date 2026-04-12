@@ -5,7 +5,7 @@ import Layout from './components/layout/Layout';
 import { AuthProvider } from './Context/AuthContext';
 import { CartProvider } from './Context/CartContext';
 import { WishlistProvider } from './Context/WishlistContext';
-
+import Lookbook from './components/features/Lookbook';
 // Lazy load pages to reduce initial bundle size
 const Home = lazy(() => import('./pages/Home'));
 const Shop = lazy(() => import('./pages/Shop'));
@@ -51,6 +51,7 @@ function App() {
                                 <Route path="/size-guide" element={<SizeGuide />} />
                                 <Route path="/contact" element={<Contact />} />
                                 <Route path="/login" element={<Login />} />
+                                <Route path="/lookbook" element={<Lookbook />} />
                             </Routes>
                         </Suspense>
                     </Layout>

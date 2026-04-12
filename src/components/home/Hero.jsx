@@ -1,15 +1,16 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import Button from '../ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+    const navigate = useNavigate();
     return (
         <section className="relative h-[80vh] w-full overflow-hidden bg-gray-100">
             {/* Background Image Placeholder or Gradient */}
             <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 opacity-90">
                 {/* In a real app, use an <img> or background-image here */}
                 <img
-                    src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
+               
                     alt="Fashion Model"
                     className="w-full h-full object-cover mix-blend-overlay opacity-50"
                 />
@@ -35,10 +36,10 @@ const Hero = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <Button variant="primary" size="lg">
+                        <Button variant="primary" size="lg" onClick={() => navigate('/shop')}>
                             Shop Now
                         </Button>
-                        <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black">
+                        <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black" onClick={() => navigate('/lookbook')}>
                             View Lookbook
                         </Button>
                     </div>
