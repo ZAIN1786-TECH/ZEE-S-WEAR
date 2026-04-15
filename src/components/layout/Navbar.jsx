@@ -117,7 +117,7 @@ const Navbar = () => {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="h-16 flex items-center justify-between">
-                    <Link to="/" className="text-[1.7rem] leading-none font-display font-bold text-brand-black tracking-tight">
+                    <Link to="/" className="text-[1.7rem] leading-none font-display font-bold text-brand-black tracking-tight" onClick={() => navigate('/')}>
                         ZEES WEAR
                     </Link>
 
