@@ -1,13 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const lookbookData = [
-  {
-    id: 1,
-    image: "/Images/Boho Maxi Dress.jpeg",
-    title: "Boho Maxi Dress",
-    category: "Women",
-  },
   {
     id: 2,
     image: "/Images/Business Formal Suit.jpg",
@@ -192,6 +187,11 @@ const lookbookData = [
 
 export default function Lookbook() {
   const [filter, setFilter] = useState("All");
+  const navigate = useNavigate();
+
+  const handleViewProduct = (item) => {
+    navigate(`/product/${item.id}`, { state: { lookbookItem: item } });
+  };
 
   const filteredItems =
     filter === "All"
@@ -231,26 +231,35 @@ export default function Lookbook() {
       {/* Grid */}
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {filteredItems.map((item) => (
-          <div
+          <article
             key={item.id}
-            className="group relative overflow-hidden cursor-pointer"
+            className="group cursor-pointer overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl"
           >
-            <img
-              src={item.image}
-              alt={item.title}
-              className="w-full h-[420px] object-cover transition-transform duration-500 group-hover:scale-110"
-            />
+            <div className="overflow-hidden">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="h-105 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-end p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-white text-xl font-medium">
+            <div className="space-y-4 p-5">
+              <h3 className="text-lg font-semibold tracking-wide text-gray-900">
                 {item.title}
               </h3>
-              <button className="mt-3 bg-white text-black px-4 py-2 w-max hover:bg-gray-200 transition">
-                Shop Now
-              </button>
+              <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                <span className="text-xs uppercase tracking-[0.18em] text-gray-500">
+                  {item.category}
+                </span>
+                <button
+                  onClick={() => handleViewProduct(item)}
+                  className="rounded-full border border-black px-4 py-2 text-sm font-medium text-black transition-all duration-300 group-hover:bg-black group-hover:text-white"
+                >
+                  View Product
+                </button>
+              </div>
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </div>

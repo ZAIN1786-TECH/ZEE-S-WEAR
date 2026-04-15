@@ -12,8 +12,15 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const signInWithGoogle = () => {
-        return signInWithPopup(auth, googleProvider);
+    const signInWithGoogle = async () => {
+        try {
+            return await signInWithPopup(auth, googleProvider);
+        } catch (error) {
+            const code = error?.code || 'auth/unknown';
+            const normalizedError = new Error(error?.message || 'Sign in failed.');
+            normalizedError.code = code;
+            throw normalizedError;
+        }
     };
 
     const logout = () => {

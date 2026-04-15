@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import ProductGallery from '../components/product/ProductGallery';
 import ProductInfo from '../components/product/ProductInfo';
 import FeaturedSection from '../components/home/FeaturedSection';
@@ -8,10 +8,30 @@ import { getLocalImage } from '../utils/imageMapper';
 
 const Product = () => {
     const { id } = useParams();
+    const { state } = useLocation();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const lookbookItem = state?.lookbookItem;
+
+        if (lookbookItem && String(lookbookItem.id) === String(id)) {
+            setProduct({
+                id: lookbookItem.id,
+                name: lookbookItem.title,
+                price: (49 + Number(lookbookItem.id)).toFixed(2),
+                description: `A premium ${lookbookItem.category.toLowerCase()} piece from the Zees Wear lookbook, crafted for elevated daily styling and lasting comfort.`,
+                images: [
+                    lookbookItem.image,
+                    lookbookItem.image,
+                    lookbookItem.image,
+                    lookbookItem.image
+                ]
+            });
+            setLoading(false);
+            return;
+        }
+
         const fetchProduct = async () => {
             try {
                 const response = await fetch(`https://fakestoreapi.com/products/${id}`);
@@ -42,7 +62,7 @@ setProduct({
 if (id) {
     fetchProduct();
 }
-    }, [id]);
+    }, [id, state]);
 
 if (loading) {
     return (

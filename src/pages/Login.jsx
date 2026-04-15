@@ -5,19 +5,42 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const Login = () => {
     const { signInWithGoogle } = useAuth();
     const [isLoggingIn, setIsLoggingIn] = useState(false);
+    const [authError, setAuthError] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
 
     // Get the page they came from, or default to home
     const from = location.state?.from?.pathname || "/";
 
+    const getAuthErrorMessage = (code) => {
+        switch (code) {
+            case 'auth/popup-closed-by-user':
+                return 'Sign-in window was closed before completion.';
+            case 'auth/popup-blocked':
+                return 'Popup was blocked by your browser. Please allow popups and try again.';
+            case 'auth/cancelled-popup-request':
+                return 'Another sign-in attempt is already in progress. Please wait a moment and retry.';
+            case 'auth/network-request-failed':
+                return 'Network error. Check your internet connection and try again.';
+            case 'auth/too-many-requests':
+                return 'Too many attempts. Please wait and try again later.';
+            default:
+                return 'Sign-in failed. Please try again.';
+        }
+    };
+
     const handleGoogleSignIn = async () => {
+        setAuthError('');
         setIsLoggingIn(true);
         try {
             await signInWithGoogle();
             navigate(from, { replace: true });
         } catch (error) {
-            console.error("Failed to sign in", error);
+            console.error('Failed to sign in', {
+                code: error?.code,
+                message: error?.message,
+            });
+            setAuthError(getAuthErrorMessage(error?.code));
         } finally {
             setIsLoggingIn(false);
         }
@@ -36,6 +59,11 @@ const Login = () => {
                 </div>
 
                 <div className="mt-8 space-y-6">
+                    {authError && (
+                        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert" aria-live="polite">
+                            {authError}
+                        </div>
+                    )}
                     <button
                         onClick={handleGoogleSignIn}
                         disabled={isLoggingIn}

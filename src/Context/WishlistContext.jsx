@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { db } from '../Firebase/firebase';
-import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
@@ -12,40 +10,28 @@ export const useWishlist = () => {
 export const WishlistProvider = ({ children }) => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const { currentUser } = useAuth();
+    const wishlistStorageKey = currentUser ? `wishlist_${currentUser.uid}` : 'wishlist_guest';
 
-    // Fetch wishlist from Firestore when user logs in
+    // Load wishlist from localStorage for signed-in user or guest session.
     useEffect(() => {
-        if (currentUser) {
-            const userDocRef = doc(db, 'users', currentUser.uid);
-            const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    setWishlistItems(data.favourites || []);
-                } else {
-                    setWishlistItems([]);
-                }
-            }, (error) => {
-                console.error("Error fetching wishlist:", error);
-            });
-            return unsubscribe;
-        } else {
-            // If no user, clear wishlist
+        try {
+            const storedWishlist = localStorage.getItem(wishlistStorageKey);
+            setWishlistItems(storedWishlist ? JSON.parse(storedWishlist) : []);
+        } catch (error) {
+            console.error('Error reading wishlist from localStorage:', error);
             setWishlistItems([]);
         }
-    }, [currentUser]);
+    }, [wishlistStorageKey]);
 
-    const updateWishlistInFirestore = async (newWishlistItems) => {
-        if (currentUser) {
-            try {
-                const userDocRef = doc(db, 'users', currentUser.uid);
-                await setDoc(userDocRef, { favourites: newWishlistItems }, { merge: true });
-            } catch (error) {
-                console.error("Error updating wishlist in Firestore:", error);
-            }
+    const persistWishlist = (newWishlistItems) => {
+        try {
+            localStorage.setItem(wishlistStorageKey, JSON.stringify(newWishlistItems));
+        } catch (error) {
+            console.error('Error writing wishlist to localStorage:', error);
         }
     };
 
-    const toggleWishlist = async (product) => {
+    const toggleWishlist = (product) => {
         const exists = wishlistItems.find((item) => item.id === product.id);
         let newItems;
         if (exists) {
@@ -54,7 +40,7 @@ export const WishlistProvider = ({ children }) => {
             newItems = [...wishlistItems, { ...product, timestamp: new Date() }];
         }
         setWishlistItems(newItems);
-        await updateWishlistInFirestore(newItems);
+        persistWishlist(newItems);
     };
 
     const isInWishlist = (productId) => {

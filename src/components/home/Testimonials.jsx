@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const testimonials = [
     {
@@ -27,35 +28,44 @@ const testimonials = [
 
 const Testimonials = () => {
     return (
-        <section className="py-20 bg-brand-gray">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-black mb-4">
-                        What Our Customers Say
+        <section className="relative overflow-hidden px-6 py-28 md:px-10 lg:px-16 lg:py-36">
+            <div className="relative mx-auto max-w-450">
+                <div className="mb-16 max-w-3xl">
+                    <p className="mb-5 text-xs uppercase tracking-[0.45em] text-brand-gold/90">Social Proof</p>
+                    <h2 className="font-display text-4xl leading-[0.95] text-brand-ivory md:text-6xl">
+                        Trusted by tastemakers, worn by insiders.
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {testimonials.map((testimonial) => (
-                        <div key={testimonial.id} className="bg-white p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex text-brand-gold mb-4">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    {testimonials.map((testimonial, index) => (
+                        <motion.article
+                            key={testimonial.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.35 }}
+                            transition={{ duration: 0.65, delay: index * 0.08 }}
+                            whileHover={{ scale: 1.03 }}
+                            className="relative overflow-hidden rounded-[1.8rem] border border-brand-gold/25 bg-white/10 p-8 shadow-[0_24px_65px_rgba(0,0,0,0.34)] backdrop-blur-xl transition-transform duration-700 md:p-10"
+                        >
+                            <div className="mb-5 flex text-[#b39145]">
                                 {[...Array(5)].map((_, i) => (
                                     <Star key={i} size={16} fill="currentColor" />
                                 ))}
                             </div>
-                            <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
-                            <div className="flex items-center">
+                            <p className="mb-8 font-display text-xl leading-relaxed text-brand-ivory/92 md:text-2xl">"{testimonial.content}"</p>
+                            <div className="flex items-center gap-4">
                                 <img
                                     src={testimonial.avatar}
                                     alt={testimonial.name}
-                                    className="h-10 w-10 rounded-full object-cover mr-4"
+                                    className="h-12 w-12 rounded-full object-cover"
                                 />
                                 <div>
-                                    <h4 className="font-bold text-sm text-brand-black">{testimonial.name}</h4>
-                                    <p className="text-xs text-gray-500">{testimonial.role}</p>
+                                    <h4 className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-ivory">{testimonial.name}</h4>
+                                    <p className="mt-1 text-xs uppercase tracking-[0.22em] text-brand-ivory/60">{testimonial.role}</p>
                                 </div>
                             </div>
-                        </div>
+                        </motion.article>
                     ))}
                 </div>
             </div>

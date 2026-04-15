@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 
-const FilterSection = ({ title, options, isOpen = true }) => {
+const FilterSection = ({ title, options, isOpen = true, selectedValues = [], onToggle }) => {
     const [expanded, setExpanded] = useState(isOpen);
 
     return (
@@ -26,8 +26,10 @@ const FilterSection = ({ title, options, isOpen = true }) => {
                                 <input
                                     id={`filter-${title}-${optionIdx}`}
                                     name={`${title}[]`}
-                                    defaultValue={option.value}
+                                    value={option.value}
                                     type="checkbox"
+                                    checked={selectedValues.includes(option.value)}
+                                    onChange={() => onToggle && onToggle(option.value)}
                                     className="h-4 w-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold"
                                 />
                                 <label
@@ -45,13 +47,18 @@ const FilterSection = ({ title, options, isOpen = true }) => {
     );
 };
 
-const FilterSidebar = () => {
-    const categories = [
-        { value: 'new-arrivals', label: 'New Arrivals' },
-        { value: 'tees', label: 'Tees' },
-        { value: 'hoodies', label: 'Hoodies & Sweatshirts' },
-        { value: 'pants', label: 'Pants' },
-    ];
+const formatCategoryLabel = (value) => {
+    if (!value) return '';
+    return value
+        .replace(/'/g, '')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const FilterSidebar = ({ categories = [], selectedCategories = [], onToggleCategory }) => {
+    const categoryOptions = categories.map((category) => ({
+        value: category,
+        label: formatCategoryLabel(category),
+    }));
 
     const sizes = [
         { value: 'xs', label: 'XS' },
@@ -63,7 +70,12 @@ const FilterSidebar = () => {
 
     return (
         <form className="hidden lg:block">
-            <FilterSection title="Category" options={categories} />
+            <FilterSection
+                title="Category"
+                options={categoryOptions}
+                selectedValues={selectedCategories}
+                onToggle={onToggleCategory}
+            />
             <FilterSection title="Size" options={sizes} isOpen={false} />
             <div className="border-b border-gray-200 py-6">
                 <h3 className="font-medium text-gray-900 mb-4">Price Range</h3>

@@ -6,11 +6,19 @@ import Button from '../components/ui/Button';
 import PaymentForm from '../components/checkout/PaymentForm';
 
 const Checkout = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, loading } = useAuth();
     const { cartItems, getCartTotal } = useCart();
     const location = useLocation();
     const navigate = useNavigate();
     const [isProcessing, setIsProcessing] = useState(false);
+
+    if (loading) {
+        return (
+            <div className="min-h-[60vh] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-gold"></div>
+            </div>
+        );
+    }
 
     if (!currentUser) {
         return <Navigate to="/login" state={{ from: location }} replace />;

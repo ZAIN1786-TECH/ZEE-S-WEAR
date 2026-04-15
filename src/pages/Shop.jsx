@@ -6,9 +6,17 @@ import FilterSidebar from '../components/features/FilterSidebar';
 import SortDropdown from '../components/features/SortDropdown';
 import { getLocalImage } from '../utils/imageMapper';
 
+const formatCategoryLabel = (value) => {
+    if (!value) return '';
+    return value
+        .replace(/'/g, '')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
 const Shop = () => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
     const [products, setProducts] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,6 +46,20 @@ const Shop = () => {
 
         fetchProducts();
     }, []);
+
+    const handleToggleCategory = (category) => {
+        setSelectedCategories((prev) => (
+            prev.includes(category)
+                ? prev.filter((item) => item !== category)
+                : [...prev, category]
+        ));
+    };
+
+    const categories = [...new Set(products.map((product) => product.category))];
+
+    const filteredProducts = selectedCategories.length > 0
+        ? products.filter((product) => selectedCategories.includes(product.category))
+        : products;
 
     return (
         <div className="bg-white">
@@ -73,12 +95,26 @@ const Shop = () => {
                                 </div>
                                 <form className="mt-4 border-t border-gray-200">
                                     <h3 className="sr-only">Categories</h3>
-                                    <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                                        <li><a href="#" className="block px-2 py-3">New Arrivals</a></li>
-                                        <li><a href="#" className="block px-2 py-3">Tees</a></li>
-                                        <li><a href="#" className="block px-2 py-3">Hoodies</a></li>
-                                        <li><a href="#" className="block px-2 py-3">Pants</a></li>
-                                    </ul>
+                                    <div className="px-2 py-3 space-y-4">
+                                        {categories.map((category, index) => (
+                                            <div key={category} className="flex items-center">
+                                                <input
+                                                    id={`mobile-filter-category-${index}`}
+                                                    type="checkbox"
+                                                    value={category}
+                                                    checked={selectedCategories.includes(category)}
+                                                    onChange={() => handleToggleCategory(category)}
+                                                    className="h-4 w-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold"
+                                                />
+                                                <label
+                                                    htmlFor={`mobile-filter-category-${index}`}
+                                                    className="ml-3 text-sm font-medium text-gray-900"
+                                                >
+                                                    {formatCategoryLabel(category)}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </form>
                             </motion.div>
                         </>
@@ -106,7 +142,11 @@ const Shop = () => {
 
                     <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                         {/* Filters */}
-                        <FilterSidebar />
+                        <FilterSidebar
+                            categories={categories}
+                            selectedCategories={selectedCategories}
+                            onToggleCategory={handleToggleCategory}
+                        />
 
                         {/* Product Grid */}
                         <div className="lg:col-span-3">
@@ -122,7 +162,7 @@ const Shop = () => {
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-4 md:gap-x-6 xl:gap-x-8">
-                                    {products.map((product) => (
+                                    {filteredProducts.map((product) => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
